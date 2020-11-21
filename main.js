@@ -215,3 +215,15 @@ class Inventario{
         aux.siguiente.siguiente = temp;
     }
 }
+
+class Producto{
+    constructor(codigo,nombre,descripcion,cantidad,costo,posicion){
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.cantidad = cantidad;
+        this.costo = costo;
+        this.posicion = posicion;
+        this.siguiente = null;
+    }
+}
