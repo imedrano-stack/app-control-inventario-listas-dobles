@@ -102,32 +102,41 @@ class Inventario{
     }
 
     listar(){
-        crearTabla();
-        let valorMercancia = 0;
-        let tabla = document.querySelector("#tabla");
-        let mercancia = document.querySelector("#mercancia");
+
+        crearTabla()
+        let valorMercancia = 0
+
+        let tabla = document.querySelector("#tabla")
+
+        let mercancia = document.querySelector("#mercancia")
+
         if (this.inicio == null){
-            div.textContent="";
-            div.insertAdjacentHTML("beforeend","No existen productos");
-            return false;
+            div.textContent=""
+
+            div.insertAdjacentHTML("beforeend","No existen productos")
+
+            return false
         }
-        aux = this.inicio;
+
+        aux = this.inicio
+
         while (aux != null){
-            let ren = tabla.insertRow(-1);
-            let col = ren.insertCell(0);
-            let col1 = ren.insertCell(1);
-            let col2 = ren.insertCell(2);
-            let col3 = ren.insertCell(3);
-            let col4 = ren.insertCell(4);
-            col.textContent = aux.codigo;
-            col1.textContent = aux.nombre;
-            col2.textContent = aux.descripcion;
-            col3.textContent = aux.cantidad;
-            col4.textContent = aux.costo;
-            valorMercancia += (parseInt(aux.cantidad) * parseInt(aux.costo));
-            aux = aux.siguiente;
+            let ren = tabla.insertRow(0)
+            let col = ren.insertCell(0)
+            let col1 = ren.insertCell(1)
+            let col2 = ren.insertCell(2)
+            let col3 = ren.insertCell(3)
+            let col4 = ren.insertCell(4)
+
+            col.textContent = aux.codigo
+            col1.textContent = aux.nombre
+            col2.textContent = aux.descripcion
+            col3.textContent = aux.cantidad
+            col4.textContent = aux.costo
+            valorMercancia += (parseInt(aux.cantidad) * parseInt(aux.costo))
+            aux = aux.siguiente
         }
-        mercancia.textContent = "El valor total es: $"+valorMercancia;
+        mercancia.textContent = "Valor total de la mercancia: $"+valorMercancia
     }
 
     listarInverso(){
@@ -151,6 +160,7 @@ class Inventario{
             let col2 = ren.insertCell(2);
             let col3 = ren.insertCell(3);
             let col4 = ren.insertCell(4);
+
             col.textContent = aux.codigo;
             col1.textContent = aux.nombre;
             col2.textContent = aux.descripcion;
@@ -251,8 +261,229 @@ function validar(){
         div.insertAdjacentHTML("beforeend","<p>Un campo esta sin llenar.</p>");
         return false;
     }
-    
+
     else{
         return 1;
     }
 }
+
+//BOTONES
+
+let inventario = new Inventario();
+
+btnAgregar.addEventListener("click",()=>{
+    if (posicion.value == ""){
+        let validacion = validar();
+
+        if (validacion == 1){
+            let nuevo = new Producto(
+                codigo.value, 
+                nombre.value, 
+                descripcion.value, 
+                cantidad.value, 
+                costo.value
+            );
+
+            let agregar = inventario.agregar(nuevo);
+
+            if (agregar == false){
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>El código ya existe.</p>");
+            }
+
+            else{
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>Producto agregado.</p>");
+            }
+        }
+    }
+
+    else if (posicion.value == 1){
+        let validacion = validar();
+
+        if (validacion == 1){
+            let nuevo = new Producto(
+                codigo.value,
+                nombre.value,
+                descripcion.value,
+                cantidad.value,
+                costo.value
+            );
+
+            let agregar = inventario.agregarInicio(nuevo);
+
+            if (agregar == false){
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>El código ya existe.</p>");
+            }
+            else{
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>Producto agregado.</p>");
+            }
+        }
+    }
+
+    else{
+        let validacion = validar();
+
+        if (validacion == 1){
+            let nuevo = new Producto(codigo.value,nombre.value,descripcion.value,cantidad.value,costo.value);
+            let agregarPosicion = inventario.agregarPosicion(nuevo,pos.value);
+            if (agregarPosicion == false){
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>Error, no existe elemento en la posicion o el codigo ya existe.</p>");  
+            }
+            else{
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>Producto agregado.</p>");
+            }
+        }
+    }
+});
+
+btnBorrar.addEventListener("click",()=>{
+
+    producto = inventario.borrarCodigo(codigo.value);
+
+    if (producto == null){
+        div.textContent="";
+        div.insertAdjacentHTML("beforeend","El producto no existe: "+producto);
+        return false;
+    }
+
+    let atributos =[
+        "codigo",
+        "nombre",
+        "descripcion",
+        "cantidad",
+        "costo"
+    ];
+
+    let labels = [
+        "Código",
+        "Nombre",
+        "Descripción",
+        "Cantidad",
+        "Costo"
+    ];
+
+    div.textContent="";
+
+    div.insertAdjacentHTML("beforeend","<p>Producto eliminado.</p>");
+
+    div.insertAdjacentHTML("beforeend","<ul id='lista'></ul>");
+    
+    let lista = document.querySelector("#lista");
+
+    for(let i = 0; i < 5; i++){
+        let item = document.createElement("li");
+        item.textContent=labels[i]+": "+producto[atributos[i]];
+        lista.appendChild(item);
+    }
+});
+
+btnBuscar.addEventListener("click",()=>{
+    producto = inventario.buscarCodigo(codigo.value);
+    if (producto == null){
+        div.textContent="";
+        div.insertAdjacentHTML("beforeend","El producto no existe: "+producto);
+        return false;
+    }
+
+    let atributos =[
+        "codigo",
+        "nombre",
+        "descripcion",
+        "cantidad",
+        "costo"
+    ];
+
+    let labels = [
+        "Código",
+        "Nombre",
+        "Descripción",
+        "Cantidad",
+        "Costo"
+    ];
+
+    div.textContent="";
+    div.insertAdjacentHTML("beforeend","<ul id='lista'></ul>");
+    let lista = document.querySelector("#lista");
+
+    for(let i = 0; i<5; i++){
+        let item = document.createElement("li");
+        item.textContent=labels[i]+": "+producto[atributos[i]];
+        lista.appendChild(item);
+    }
+})
+
+btnListar.addEventListener("click",()=>{
+    inventario.listar();
+})
+
+btnListarInverso.addEventListener("click",()=>{
+    inventario.listarInverso();
+})
+
+btnAgregarInicio.addEventListener("click",()=>{
+    let validacion = validar();
+
+        if (validacion == 1){
+            let nuevo = new Producto(
+                codigo.value,
+                nombre.value,
+                descripcion.value,
+                cantidad.value,
+                costo.value
+            );
+
+            let agregar = inventario.agregarInicio(nuevo);
+            if (agregar == false){
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>El codigo del producto ya existe.</p>");
+            }
+            else{
+                div.textContent="";
+                div.insertAdjacentHTML("beforeend","<p>Producto agregado.</p>");
+            }
+            
+        }
+})
+
+btnBorrarInicio.addEventListener("click",()=>{
+    let producto = inventario.borrarInicio();
+
+    if (producto == null){
+        div.textContent="";
+        div.insertAdjacentHTML("beforeend","El producto no existe: "+producto);
+        return false;
+    }
+
+    let atributos =[
+        "codigo",
+        "nombre",
+        "descripcion",
+        "cantidad",
+        "costo"
+    ];
+
+    let labels = [
+        "Código",
+        "Nombre",
+        "Descripción",
+        "Cantidad",
+        "Costo"
+    ];
+
+    div.textContent="";
+    div.insertAdjacentHTML("beforeend","<p>Producto eliminado.</p>");
+    div.insertAdjacentHTML("beforeend","<ul id='lista'></ul>");
+
+    let lista = document.querySelector("#lista");
+
+    for(let i = 0; i<5; i++){
+        let item = document.createElement("li");
+        item.textContent=labels[i]+": "+producto[atributos[i]];
+        lista.appendChild(item);
+    }
+})
