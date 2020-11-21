@@ -227,3 +227,32 @@ class Producto{
         this.siguiente = null;
     }
 }
+
+//FUNCIONES
+
+function crearTabla(){
+    div.textContent="";
+    div.insertAdjacentHTML("beforeend",`<table id="t1" style="text-align:center">
+    <thead>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Costo</th>
+    <thead>
+    <tbody id="tabla" style="text-align:center">
+    </tbody>
+    <p id ="merc"></p>`);
+}
+
+function validar(){
+    if (codigo.value == "" || nombre.value == "" || descripcion.value == "" || cantidad.value =="" || costo.value ==""){
+        div.textContent="";
+        div.insertAdjacentHTML("beforeend","<p>Un campo esta sin llenar.</p>");
+        return false;
+    }
+    
+    else{
+        return 1;
+    }
+}
